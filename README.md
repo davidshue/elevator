@@ -5,3 +5,4 @@
 ### gradle fatJar
 ### cd build/libs
 ### java -jar elevator-all-1.0-SNAPSHOT.jar
+# elevator
