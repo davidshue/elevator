@@ -54,9 +54,10 @@ public class Elevator extends Thread {
 
 	@Override
 	public void run()  {
-		synchronized (this) {
-			while(true) {
-				if (pendingRequests.isEmpty()) {
+
+		while(true) {
+			if (pendingRequests.isEmpty()) {
+				synchronized (this) {
 					try {
 						System.out.println(this);
 						this.status = Status.idle;
@@ -65,27 +66,28 @@ public class Elevator extends Thread {
 						e.printStackTrace();
 					}
 				}
-
-				int nextLevel = getNextStop();
-				if (currentLevel > nextLevel) {
-					this.status = Status.going_down;
-				}
-				else {
-					this.status = Status.going_up;
-				}
-				this.currentLevel = nextLevel;
-				System.out.println("elevator " + this.getNumber() + " " + this.getStatus() + " to " + nextLevel);
-
-				pendingRequests.remove(this.currentLevel);
-				// Spend 2000 ms stopping at a level
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				System.out.println("elevator " + this.getNumber() + " " + this.getStatus() + " reached " + nextLevel);
 			}
+
+			int nextLevel = getNextStop();
+			if (currentLevel > nextLevel) {
+				this.status = Status.going_down;
+			}
+			else {
+				this.status = Status.going_up;
+			}
+			this.currentLevel = nextLevel;
+			System.out.println("elevator " + this.getNumber() + " " + this.getStatus() + " to " + nextLevel);
+
+			pendingRequests.remove(this.currentLevel);
+			// Spend 2000 ms stopping at a level
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			System.out.println("elevator " + this.getNumber() + " " + this.getStatus() + " reached " + nextLevel);
 		}
+
 
 	}
 
